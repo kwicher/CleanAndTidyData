@@ -55,5 +55,6 @@ Add __Activity__, __Subject__, and __Src__ collumns back to the dataset as they 
 
     data.summary<-summarise_each(data.grouped,funs(mean))
 
-# Export the final dataset to the text file
-write.table(data.summary, file="output.txt", row.names = F) 
+#### Export the final dataset to the text file _output.txt_
+
+    write.table(data.summary, file="output.txt", row.names = F) 
