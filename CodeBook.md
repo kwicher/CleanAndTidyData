@@ -43,15 +43,17 @@ Add __Activity__, __Subject__, and __Src__ collumns back to the dataset as they 
 
     all.data.mean.std <- cbind(all.data.mean.std, Activity=all.data$Activity, Subject=all.data$Subject, Src=all.data$Src)
 
-#### Group extracted data by __Subject__ and __Activity__ using `group_by` command from __dplyr__ package
+#### Group extracted data by __Subject__ and __Activity__ using `group_by` command from _dplyr_ package
 
     data.grouped<-group_by(all.data.mean.std, Subject, Activity)
 
-#### Remove unnecessary (in this excersize) __Src__ collumn using `mutate` column for __dplyr__ package
-data.grouped<-mutate(data.grouped, Src=NULL)
+#### Remove unnecessary (in this excersize) _Src_ collumn using `mutate` column for _dplyr_ package
 
-# Create a final dataset with means of each extracted data for the Subject-Activity pair
-data.summary<-summarise_each(data.grouped,funs(mean))
+    data.grouped<-mutate(data.grouped, Src=NULL)
+
+#### Create a final dataset with means of each extracted data column for the Subject-Activity pair using `summarise_each` command from _dplyr_ package
+
+    data.summary<-summarise_each(data.grouped,funs(mean))
 
 # Export the final dataset to the text file
 write.table(data.summary, file="output.txt", row.names = F) 
