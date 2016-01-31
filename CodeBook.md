@@ -1,6 +1,6 @@
 # CodeBook for CleanAndTidyData
 
-### Read the necessary files - variables
+### Read the necessary files
 `activities.labels` - a data frame to store key-value pairs describing __numeric coding of the activities' names__
 
 `features` - a data frame to store the __names of the variables__ calculated from the data
@@ -17,11 +17,13 @@
 
 `train.data` - a data frame to store the list of __variables__ calculated for the corresponding observation data from the __train dataset__
 
-# Decode the activities from numbers to names
-for(i in 1:6){
-  train.activities<-data.frame(lapply(train.activities, function(x) {gsub(activities.labels$No[i], activities.labels$Activity[i], x)}), stringsAsFactors = F)
-  test.activities<-data.frame(lapply(test.activities, function(x) {gsub(activities.labels$No[i], activities.labels$Activity[i], x)}), stringsAsFactors = F)
-}
+### Decode the activities from numbers to names
+Substitute activities coded as number with the corresponding activities names in data frames containing both __train__ and __test__ data sest using _gsub_
+
+    for(i in 1:6){
+      train.activities<-data.frame(lapply(train.activities, function(x) {gsub(activities.labels$No[i],      activities.labels$Activity[i], x)}), stringsAsFactors = F)
+      test.activities<-data.frame(lapply(test.activities, function(x) {gsub(activities.labels$No[i], activities.labels$Activity[i], x)}), stringsAsFactors = F)
+    }
 
 # Combine the data with information of the:
 # - named type of activity
