@@ -21,20 +21,18 @@
 Substitute activities coded as number with the corresponding activities names in data frames containing both __train__ and __test__ data sest using _gsub_
 
     for(i in 1:6){
-      train.activities<-data.frame(lapply(train.activities, function(x) {gsub(activities.labels$No[i],      activities.labels$Activity[i], x)}), stringsAsFactors = F)
+      train.activities<-data.frame(lapply(train.activities, function(x) {gsub(activities.labels$No[i], activities.labels$Activity[i], x)}), stringsAsFactors = F)
       test.activities<-data.frame(lapply(test.activities, function(x) {gsub(activities.labels$No[i], activities.labels$Activity[i], x)}), stringsAsFactors = F)
     }
 
-# Combine the data with information of the:
-# - named type of activity
-# - number of the subject
-# - source file of the data ("train" or "test")
+### Add to the __train__ and __test__ data frames columns with information on the named type of activity, number of the subject, source file of the data ("train" or "test")
 
-train.data <- cbind(train.data, train.activities, train.subject, Src=rep("train",nrow(train.data)))
-test.data <- cbind(test.data, test.activities, test.subject, Src=rep("test",nrow(test.data)))
+    train.data <- cbind(train.data, train.activities, train.subject, Src=rep("train",nrow(train.data)))
+    test.data <- cbind(test.data, test.activities, test.subject, Src=rep("test",nrow(test.data)))
 
-# Merge together data from train and test files
-all.data <-rbind(test.data, train.data)
+### Merge together __train__ and __test__ data frames
+
+    all.data <-rbind(test.data, train.data)
 
 # Extract data on mean and average of each measurment type
 all.data.mean.std <- select(all.data, c(grep("std",colnames(all.data)),grep("mean",colnames(all.data))))
