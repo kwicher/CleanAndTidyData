@@ -1,0 +1,51 @@
+# CodeBook for CleanAndTidyData
+
+### Read the necessary files - variables
+`activities.labels` - a data frame to store key-value pairs describing __numeric coding of the activities' names__
+
+`features` - a data frame to store the __names of the variables__ calculated from the data
+
+`test.subject` - a data frame to store the list of __subject codes__ for the corresponding observation data from the __test dataset__
+
+`test.activities` - a data frame to store the list of assigned __activities codes__ for the corresponding observation data from the __test dataset__
+
+`test.data` - a data frame to store the list of __variables__ calculated for the corresponding observation data from the __test dataset__
+
+`train.subject` - a data frame to store the list of __subject codes__ for the corresponding observation data from the __train dataset__
+    
+`train.activities` - a data frame to store the list of assigned __activities codes__ for the corresponding observation data from the __train dataset__
+
+`train.data` - a data frame to store the list of __variables__ calculated for the corresponding observation data from the __train dataset__
+
+# Decode the activities from numbers to names
+for(i in 1:6){
+  train.activities<-data.frame(lapply(train.activities, function(x) {gsub(activities.labels$No[i], activities.labels$Activity[i], x)}), stringsAsFactors = F)
+  test.activities<-data.frame(lapply(test.activities, function(x) {gsub(activities.labels$No[i], activities.labels$Activity[i], x)}), stringsAsFactors = F)
+}
+
+# Combine the data with information of the:
+# - named type of activity
+# - number of the subject
+# - source file of the data ("train" or "test")
+
+train.data <- cbind(train.data, train.activities, train.subject, Src=rep("train",nrow(train.data)))
+test.data <- cbind(test.data, test.activities, test.subject, Src=rep("test",nrow(test.data)))
+
+# Merge together data from train and test files
+all.data <-rbind(test.data, train.data)
+
+# Extract data on mean and average of each measurment type
+all.data.mean.std <- select(all.data, c(grep("std",colnames(all.data)),grep("mean",colnames(all.data))))
+all.data.mean.std <- cbind(all.data.mean.std, Activity=all.data$Activity, Subject=all.data$Subject, Src=all.data$Src)
+
+# Group extraxted data by Subject and Activity
+data.grouped<-group_by(all.data.mean.std, Subject, Activity)
+
+# Remove unnecessary Src column
+data.grouped<-mutate(data.grouped, Src=NULL)
+
+# Create a final dataset with means of each extracted data for the Subject-Activity pair
+data.summary<-summarise_each(data.grouped,funs(mean))
+
+# Export the final dataset to the text file
+write.table(data.summary, file="output.txt", row.names = F) 
